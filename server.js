@@ -1,47 +1,33 @@
-import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import helmet from "helmet";
-import multer from "multer";
-import morgan from "morgan";
-import path from "path";
-import { fileURLToPath } from "url";
+const express = require("express");
+const cors = require("cors");
+const morgan = require("morgan");
+const connect = require("./database/conn.js");
+const router = require("./router/route.js");
 
-//configuration
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config();
 const app = express();
+
+/** middlewares */
 app.use(express.json());
-app.use(bodyParser.json({ limit: "30mb", extended: true }));
-app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
-app.use(morgan("common"));
 app.use(cors());
-app.use("/asset", express.static(path.join(__dirname, "public/asset")));
+app.use(morgan("tiny"));
+app.disable("x-powered-by"); // less hackers know about our stack
 
-//file storage
+const port = process.env.PORT || 8080;
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/asset");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
+/** api routes */
+app.use("/", router);
 
-const upload = multer(storage);
-
-//connection
-
-const PORT = process.env.PORT || 6001;
-mongoose.set("strictQuery", true);
-mongoose
-  .connect(process.env.MONGO_DB)
-  .then(app.listen(PORT, () => console.log(`server running on ${PORT}`)))
-  .catch((error) => console.log(`${error} did not connect`));
+/** start server only when we have valid connection */
+connect()
+  .then(() => {
+    try {
+      app.listen(port, () => {
+        console.log(`Server connected to http://localhost:${port}`);
+      });
+    } catch (error) {
+      console.log("Cannot connect to the server");
+    }
+  })
+  .catch((error) => {
+    console.log("Invalid database connection...!");
+  });
