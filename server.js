@@ -35,13 +35,13 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 8080;
 
-const URI = process.env.MONGO_DB;
+const URI = process.env.MONGO_ONLINE;
 
 /** start server only when we have valid connection */
 const connection = async () => {
   try {
     mongoose.set("strictQuery", false);
-    const db = await mongoose.connect(URI);
+    const db = mongoose.connect(URI);
     if (db) {
       app.listen(PORT, () => {
         console.log(`server is running on port ${PORT}`);
