@@ -37,7 +37,8 @@ const PORT = process.env.PORT || 8080;
 
 const URI = process.env.MONGO_ONLINE;
 app.get("/", (req, res) => {
-  res.status(201).send("Backend live");
+  res.setHeader("Access-Control-Allow-credentials", "true"),
+    res.send("App is running");
 });
 /** start server only when we have valid connection */
 const connection = async () => {
