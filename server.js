@@ -3,15 +3,23 @@ const cors = require("cors");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const app = express();
+const cookieparse = require("cookie-parser");
 const env = require("dotenv");
 const route = require("./router/route");
 
 env.config();
 /** middlewares */
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
+app.use(cookieparse());
 app.use(morgan("tiny"));
 
 app.disable("x-powered-by"); // less hackers know about our stack

@@ -46,7 +46,11 @@ const cntrl = {
       const { password, confirm_password, ...info } = data._doc;
       res
         .cookie("accessToken", token, {
+          path: "/",
           httpOnly: true,
+          expires: new Date(Date.now() + 1000 * 86400), // 1 day
+          sameSite: "none",
+          secure: true,
         })
         .status(200)
         .send(info);
@@ -54,7 +58,16 @@ const cntrl = {
       res.status(500).send("something went wrong");
     }
   },
-  logout: async (req, res) => {},
+  logout: async (req, res) => {
+    res.cookie("accessToken", "", {
+      path: "/",
+      httpOnly: true,
+      expires: new Date(0),
+      sameSite: "none",
+      secure: true,
+    });
+    res.status(200).send("successful logout!");
+  },
 };
 
 module.exports = cntrl;
