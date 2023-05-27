@@ -1,31 +1,17 @@
-const expressAsyncHandler = require("express-async-handler")
-const jwt = require("jsonwebtoken")
-const User = require("../models/userModel")
+const jwt = require("jsonwebtoken");
+const User = require("../model/User.model.js");
 
-const protect = expressAsyncHandler(async (req, res, next) => {
-  try {
-    const token = req.cookies.token
+const protect = async (req, res) => {
+  const token = req.cookies.accessToken;
 
-    if (!token) {
-      res.status(401)
-      throw new Error("Not authorized, Please Login")
-    }
-
-    // verify token
-    const verified = jwt.verify(token, process.env.JWT_SECRET)
-
-    // Get user id form token
-    const user = await User.findById(verified.id).select("-password")
-
-    if (!user) {
-      res.status(401)
-      throw new Error("User not found")
-    }
-    req.user = user
-    next()
-  } catch (error) {
-    res.status(401)
-    throw new Error("Not authorized, Please Login")
+  if (!token) {
+    return res.status(401).send("You are not Authenticated");
   }
-})
-module.exports = protect
+  jwt.verify(token, process.env.ACCESS, async (err, payload) => {
+    if (err) {
+      return res.status(401).send("Token not valid");
+    }
+    req.userId = payload.id;
+  });
+};
+module.exports = protect;
