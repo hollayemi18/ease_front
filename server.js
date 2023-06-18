@@ -14,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
+    origin: ["http://localhost:3000"],
     credentials: true,
   })
 );
@@ -34,11 +35,8 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 8080;
 
-const URI = process.env.MONGO_ONLINE;
-app.get("/", (req, res) => {
-  res.setHeader("Access-Control-Allow-credentials", "true"),
-    res.send("App is running");
-});
+const URI = process.env.MONGO_DB;
+
 /** start server only when we have valid connection */
 const connection = async () => {
   try {

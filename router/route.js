@@ -1,10 +1,10 @@
 const express = require("express");
 const route = express.Router();
 const cntrl = require("../controllers/authCntrl");
-const client = require("../controllers/clientCntrl");
+const verifyToken = require("../middleware/authMiddleWare");
 
 route.post("/register", cntrl.register);
 route.post("/login", cntrl.login);
-route.delete("/del/:id", client.deleteUser);
 route.get("/logout", cntrl.logout);
+route.get("/user", verifyToken, cntrl.getUser);
 module.exports = route;

@@ -3,34 +3,28 @@ const bycrpt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cntrl = {
   register: async (req, res, next) => {
-    const { username, email, password, confirm_password } = req.body;
+    const { username, email, password } = req.body;
     const validDetails = await User.findOne({ email });
     const validName = await User.findOne({ username });
     try {
       if (validName) {
         res.status(400).send("username is taken");
-      } else {
-        if (validDetails) {
-          res.status(401).send("Email is registered ");
-        } else {
-          const hashPassword = await bycrpt.hash(password, 10);
-
-          if (password === confirm_password) {
-            const user = new User({
-              ...req.body,
-              password: hashPassword,
-              confirm_password: hashPassword,
-            });
-            await user.save();
-            res.status(200).send("data saved");
-          } else {
-            res.status(404).send("password not matched");
-          }
-        }
       }
-    } catch (err) {
-      next(err);
-    }
+      if (validDetails) {
+        res.status(401).send("Email is registered ");
+      }
+      const passwordHash = await bycrpt.hash(password, 10);
+
+      const newUser = new User({
+        username,
+        email,
+        password: passwordHash,
+      });
+      const data = await newUser.save();
+      if (data) {
+        return res.send("success");
+      }
+    } catch (error) {}
   },
   login: async (req, res) => {
     try {
@@ -42,15 +36,13 @@ const cntrl = {
       if (!compare) {
         return res.status(401).send("'wrong password or username");
       }
-      const token = jwt.sign({ id: data._id }, process.env.ACCESS);
+      const token = jwt.sign({ data }, process.env.ACCESS);
       const { password, confirm_password, ...info } = data._doc;
       res
         .cookie("accessToken", token, {
           path: "/",
           httpOnly: true,
           expires: new Date(Date.now() + 1000 * 86400), // 1 day
-          sameSite: "none",
-          secure: true,
         })
         .status(200)
         .send(info);
@@ -63,10 +55,15 @@ const cntrl = {
       path: "/",
       httpOnly: true,
       expires: new Date(0),
-      sameSite: "none",
-      secure: true,
     });
     res.status(200).send("successful logout!");
+  },
+  getUser: async (req, res) => {
+    const { email } = req.user;
+    const data = await User.findOne({ email });
+    if (data) {
+      res.send(data.username);
+    }
   },
 };
 
