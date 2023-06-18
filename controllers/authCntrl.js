@@ -59,11 +59,7 @@ const cntrl = {
     res.status(200).send("successful logout!");
   },
   getUser: async (req, res) => {
-    const { email } = req.user;
-    const data = await User.findOne({ email });
-    if (data) {
-      res.send(data.username);
-    }
+    res.send("good");
   },
 };
 
