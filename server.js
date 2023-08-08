@@ -12,12 +12,7 @@ env.config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(
-  cors({
-    origin: ["https://tailor-3e4r.onrender.com"],
-    credentials: true,
-  })
-);
+
 
 app.use(cookieparse());
 app.use(morgan("tiny"));
