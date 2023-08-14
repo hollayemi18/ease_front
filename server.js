@@ -18,9 +18,9 @@ app.use(morgan("tiny"));
 app.disable("x-powered-by"); // less hackers know about our stack
 
 app.use("/", route);
-app.get("/" ,(req, res)=>{
-  res.send("Hello Bobo")
-})
+app.get("/", (req, res) => {
+  res.send("Hello Bobo");
+});
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
   const errorMessage = err.message || "something went wrong";
