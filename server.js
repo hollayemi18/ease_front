@@ -27,27 +27,32 @@ app.use((err, req, res, next) => {
 
   return res.status(errorStatus).send(errorMessage);
 });
-
+app.use(
+  cors({
+    origin: "http://localhost:3000/",
+    credentials: true,
+    methods: "POST",
+  })
+);
 const PORT = process.env.PORT || 8080;
 
 const URI = process.env.MONGO_DB;
 
 /** start server only when we have valid connection */
 const connection = async () => {
-  try {
-    mongoose.set("strictQuery", false);
-    const db = mongoose.connect(URI);
-    if (db) {
+  mongoose.set("strictQuery", false);
+  const db = await mongoose
+    .connect(URI)
+    .then(() => {
       app.listen(PORT, () => {
-        console.log(`server is running on port ${PORT}`);
+        console.log(`server running on port ${PORT}...`);
       });
-      console.log(`Database connected`);
-    } else {
-      console.log(`Not Connected`);
-    }
-  } catch (error) {
-    console.log(error);
-  }
+      console.log("database connected successfully ");
+    })
+
+    .catch(() => {
+      console.log("Database Error");
+    });
 };
 
 connection();
