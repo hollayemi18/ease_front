@@ -36,10 +36,16 @@ const cntrl = {
       if (!compare) {
         return res.status(401).send("'wrong password or username");
       }
-      const token = jwt.sign({ data }, process.env.ACCESS);
+      const token = jwt.sign(
+        {
+          email: data.email,
+          username: data.username,
+        },
+        process.env.ACCESS
+      );
       const { password, confirm_password, ...info } = data._doc;
       res
-        .cookie("accessToken", token, {
+        .cookie("myToken", token, {
           path: "/",
           httpOnly: true,
           expires: new Date(Date.now() + 1000 * 86400), // 1 day
