@@ -9,32 +9,20 @@ const route = require("./router/route");
 
 env.config();
 /** middlewares */
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use(cookieparse());
-app.use(morgan("tiny"));
-
-app.disable("x-powered-by"); // less hackers know about our stack
-
-app.use("/", route);
-app.get("/", (req, res) => {
-  res.send("Hello Bobo");
-});
-app.use((err, req, res, next) => {
-  const errorStatus = err.status || 500;
-  const errorMessage = err.message || "something went wrong";
-
-  return res.status(errorStatus).send(errorMessage);
-});
 app.use(
   cors({
-    origin: "http://localhost:3000/",
+    origin: "http://localhost:3000",
     credentials: true,
-    methods: "POST",
   })
 );
-const PORT = process.env.PORT || 8080;
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/", route);
+app.use(cookieparse());
+app.use(morgan("tiny"));
+app.disable("x-powered-by");
+
+const PORT = 8080;
 
 const URI = process.env.MONGO_DB;
 

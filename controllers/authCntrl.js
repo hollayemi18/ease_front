@@ -2,16 +2,16 @@ const User = require("../model/User.model");
 const bycrpt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cntrl = {
-  register: async (req, res, next) => {
+  register: async (req, res) => {
     const { username, email, password } = req.body;
     const validDetails = await User.findOne({ email });
     const validName = await User.findOne({ username });
     try {
       if (validName) {
-        res.status(400).send("username is taken");
+        res.send("username is taken");
       }
       if (validDetails) {
-        res.status(401).send("Email is registered ");
+        res.send("Email is registered");
       }
       const passwordHash = await bycrpt.hash(password, 10);
 
@@ -23,6 +23,8 @@ const cntrl = {
       const data = await newUser.save();
       if (data) {
         return res.send("success");
+      } else {
+        return res.send("not successful");
       }
     } catch (error) {}
   },
