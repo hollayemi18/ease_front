@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const morgan = require("morgan");
+//const morgan = require("morgan");
 const mongoose = require("mongoose");
 const app = express();
 const cookieparse = require("cookie-parser");
@@ -19,8 +19,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/", route);
 app.use(cookieparse());
-app.use(morgan("tiny"));
-app.disable("x-powered-by");
 
 const PORT = 8080;
 
