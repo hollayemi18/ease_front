@@ -1,11 +1,5 @@
-const User = require("../model/profile");
+const User = require("../model/User.model");
 const jwt = require("jsonwebtoken");
 
-const clientCntrl = {
-  profile: async (req, res) => {
-    const {} = req.body;
-    const newProfile = await User({});
-    newProfile.save();
-  },
-};
+const clientCntrl = {};
 module.exports = clientCntrl;
