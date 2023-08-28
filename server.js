@@ -11,7 +11,7 @@ env.config();
 /** middlewares */
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://tailor-3e4r.onrender.com/",
     credentials: true,
   })
 );
