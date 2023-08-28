@@ -10,7 +10,7 @@ const verifyToken = asynchandler(async (req, res, next) => {
       if (err) {
         res.status(401).send("invalid token");
       }
-      req.user = decoded.username;
+      req.user = decoded;
       console.log(req.user);
 
       next();

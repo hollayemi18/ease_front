@@ -17,27 +17,6 @@ const UserSchema = new mongoose.Schema(
       required: true,
       unique: false,
     },
-    fullName: {
-      type: String,
-      unique: false,
-      required: true,
-    },
-    address: {
-      type: String,
-      unique: false,
-      required: true,
-    },
-    phoneNumber: {
-      type: Number,
-      unique: true,
-      required: true,
-    },
-
-    userPicture: {
-      type: String,
-      unique: false,
-      required: true,
-    },
   },
   {
     timestamps: true,

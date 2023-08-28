@@ -22,7 +22,7 @@ app.use(cookieparse());
 
 const PORT = 8080;
 
-const URI = process.env.MONGO_DB;
+const URI = process.env.MONGO_ONLINE;
 
 /** start server only when we have valid connection */
 const connection = async () => {

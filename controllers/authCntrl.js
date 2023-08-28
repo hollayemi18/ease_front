@@ -40,7 +40,9 @@ const cntrl = {
       } else {
         return res.send("not successful");
       }
-    } catch (error) {}
+    } catch (err) {
+      res.send(err.message);
+    }
   },
   login: async (req, res) => {
     try {
