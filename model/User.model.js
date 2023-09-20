@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const measure = require("../model/measurement.model");
 
 const UserSchema = new mongoose.Schema(
   {
@@ -16,6 +17,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: false,
+    },
+    measurement: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "measurement",
     },
   },
   {
