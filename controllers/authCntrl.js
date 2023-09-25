@@ -1,6 +1,7 @@
 const bycrpt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const pool = require('../conn.db');
+require('dotenv').config();
 // Function to generate a JWT token
 const generateToken = (user) => {
   const payload = {
