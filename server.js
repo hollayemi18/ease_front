@@ -14,7 +14,7 @@ const passport = require('passport');
 require('./middleware/passportAuth');
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.ONLINE,
     credentials: true,
   })
 );
