@@ -59,7 +59,7 @@ const cntrl = {
         [email]
       );
 
-      if (userLogin.rows.length === 0) {
+      if (!userLogin.rows.length) {
         res.status(401).send('User not found');
       }
       const user = userLogin.rows[0];
