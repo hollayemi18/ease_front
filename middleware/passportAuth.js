@@ -1,7 +1,6 @@
 const passport = require('passport');
 const { Strategy } = require('passport-jwt');
 const db = require('../conn.db');
-const ExtractJwt = require('passport-jwt').ExtractJwt;
 require('dotenv').config();
 
 const extract = function (req) {
