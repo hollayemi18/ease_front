@@ -5,6 +5,7 @@ const pool = require('../conn.db');
 const generateToken = (user) => {
   const payload = {
     username: user.username,
+    email: user.email,
     // You can include more data in the payload if needed
   };
 
@@ -16,18 +17,42 @@ const cntrl = {
   register: async (req, res) => {
     const { username, email, password } = req.body;
     try {
-      const passwordHash = await bycrpt.hash(password, 10);
-      const userDetails = pool.query(
-        'INSERT INTO users(username, email, password ) VALUES ($1,$2,$3)',
-        [username, email, passwordHash]
+      if (username.length < 4 || username.length > 12) {
+        return res
+          .status(400)
+          .json({ error: 'username must be between 3 and 12.' });
+      }
+      const validName = await pool.query(
+        'SELECT * FROM users WHERE username = $1',
+        [username]
       );
-
-      res.status(200).send('User details saved ');
+      const validEmail = await pool.query(
+        'SELECT * FROM users WHERE email = $1',
+        [email]
+      );
+      if (validName.rows.length > 0) {
+        res.status(401).send('Username taken');
+      }
+      if (validEmail.rows.length > 0) {
+        res.status(401).send('Email is already registered');
+      }
+      const passwordHash = await bycrpt.hash(password, 10);
+      if (validEmail && validName) {
+        const userDetails = await pool.query(
+          'INSERT INTO users(username, email, password ) VALUES ($1,$2,$3)',
+          [username, email, passwordHash]
+        );
+        if (userDetails) {
+          res.status(200).send('User details saved ');
+        }
+      } else {
+        res.status(400).send('Cant register');
+      }
     } catch (error) {}
   },
   login: async (req, res) => {
+    const { email, password } = req.body;
     try {
-      const { email, password } = req.body;
       const userLogin = await pool.query(
         'SELECT * FROM users WHERE email = $1',
         [email]
@@ -41,8 +66,8 @@ const cntrl = {
       if (comparePassword) {
         const success = 'successfully login';
         const token = generateToken(user);
-        res.cookie('accesstoken', token, { httpOnly: true });
-        res.status(200).json({ result: token, success });
+        res.cookie('token', token, { httpOnly: true });
+        return res.status(200).json({ result: token, success });
       } else {
         res.status(400).send('wrong password');
       }
@@ -57,8 +82,8 @@ const cntrl = {
     res.status(200).send('successful logout!');
   },
   getuser: async (req, res) => {
-    const data = req.user;
-    res.json(data);
+    const { username } = req.user;
+    res.send(username);
   },
 };
 

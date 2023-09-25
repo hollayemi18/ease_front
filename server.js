@@ -1,30 +1,32 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const mongoose = require('mongoose');
 const app = express();
 const cookieparse = require('cookie-parser');
 const env = require('dotenv');
 const route = require('./router/route');
 const measure = require('./router/measure');
 env.config();
+const passport = require('passport');
+
 /** middlewares */
+
+require('./middleware/passportAuth');
 app.use(
   cors({
     origin: 'http://localhost:3000',
     credentials: true,
   })
 );
+app.use(passport.initialize());
+app.use(cookieparse());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/auth', route);
 app.use('/data', measure);
-app.use(cookieparse());
 
 const PORT = 8080;
-
-const URI = process.env.MONGO_DB;
 
 app.listen(PORT, () => {
   console.log(`server running on port ${PORT}...`);
