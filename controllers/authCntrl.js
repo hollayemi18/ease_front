@@ -35,7 +35,7 @@ const cntrl = {
         res.status(401).send('Username taken');
       }
       if (validEmail.rows.length > 0) {
-        res.status(401).send('Email is already registered');
+        res.status(401).send('Email is registered');
       }
       const passwordHash = await bycrpt.hash(password, 10);
       if (validEmail && validName) {
@@ -47,7 +47,7 @@ const cntrl = {
           res.status(200).send('User details saved ');
         }
       } else {
-        res.status(400).send('Cant register');
+        res.status(400).send('cant register');
       }
     } catch (error) {}
   },
@@ -68,7 +68,7 @@ const cntrl = {
         const success = 'successfully login';
         const token = generateToken(user);
         res.cookie('token', token, { httpOnly: true });
-        return res.status(200).json({ result: token, success });
+        return res.status(200).json('Successfully Login');
       } else {
         res.status(400).send('wrong password');
       }
