@@ -9,6 +9,10 @@ const measure = require('./router/measure');
 env.config();
 const passport = require('passport');
 
+app.use(
+  cors({ origin: 'https://tailor-3e4r.onrender.com', credentials: true })
+);
+
 /** middlewares */
 
 app.use(passport.initialize());
@@ -16,10 +20,6 @@ app.use(cookieparse());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use(
-  cors({ origin: 'https://tailor-3e4r.onrender.com', credentials: true })
-);
 
 app.use('/auth', route);
 app.use('/data', measure);
