@@ -1,4 +1,4 @@
-const monoogse = require("mongoose");
+const monoogse = require('mongoose');
 
 const OnlineModel = new monoogse.Schema({
   design: {
@@ -33,4 +33,4 @@ const OnlineModel = new monoogse.Schema({
   },
 });
 
-module.exports = monoogse.model("online", OnlineModel);
+module.exports = monoogse.model('online', OnlineModel);
