@@ -16,18 +16,18 @@ app.use(cookieparse());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  cors({ origin: 'https://tailor-3e4r.onrender.com', credentials: true })
+);
+
 app.use('/auth', route);
 app.use('/data', measure);
 app.get('/', (req, res) => {
   res.status(200).send('Server is live');
 });
 require('./middleware/passportAuth');
-app.use(
-  cors({
-    origin: 'https://tailor-3e4r.onrender.com',
-    credentials: true,
-  })
-);
+
 const PORT = 8080;
 
 app.listen(PORT, () => {

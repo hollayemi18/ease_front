@@ -35,7 +35,7 @@ const cntrl = {
         res.status(401).send('Username taken');
       }
       if (validEmail.rows.length > 0) {
-        res.status(401).send('Email is registered');
+        res.status(400).send('Email is registered');
       }
       const passwordHash = await bycrpt.hash(password, 10);
       if (validEmail && validName) {
